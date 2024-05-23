@@ -21,8 +21,7 @@ Lancer le cluster :
 
 ```bash
 cd docker
-cp ../target/kafka-dix-1.0-jar-with-dependencies.jar app/
-docker compose up -d
+docker compose up 
 ```
 
 ## KStream vs KTable
