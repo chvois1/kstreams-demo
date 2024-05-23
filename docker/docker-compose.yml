@@ -33,8 +33,11 @@ services:
       #KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       #KAFKA_CREATE_TOPICS: referentiel:8:1,achats:8:1,achats-by-product-id:8:1,achats-enrichis:8:1
 
-  app:
-    build: app
+  kstreams:
+    image: kstreams-demo:0.0.1
+    container_name: kstreams
+    build:
+      context: ..
     links:
       - zookeeper:zk
       - kafka:kafka
