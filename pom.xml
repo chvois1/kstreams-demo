@@ -4,10 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>kafka.dix</groupId>
-    <artifactId>kafka-dix</artifactId>
+    <groupId>kafka-stream</groupId>
+    <artifactId>com.kafka.stream</artifactId>
     <version>1.0</version>
-
     <build>
         <plugins>
             <plugin>
@@ -29,7 +28,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.octo.kafka.dix.Main</mainClass>
+                            <mainClass>com.kafka.stream.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
