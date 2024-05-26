@@ -1,14 +1,14 @@
 package com.kafka.stream.model;
 
-/**
- * Created by thm on 08/07/2016.
- */
-public class Referentiel {
-
+public class Demande {
     private Long id;
     private String name;
-
-
+    private String firstName;
+    
+    public String getFirstName() {
+        return firstName;
+    }
+    
     public String getName() {
         return name;
     }
@@ -24,4 +24,8 @@ public class Referentiel {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }    
 }

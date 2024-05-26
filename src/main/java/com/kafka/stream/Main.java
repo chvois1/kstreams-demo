@@ -1,8 +1,8 @@
 package com.kafka.stream;
 
-import com.kafka.stream.model.ProduitBrut;
-import com.kafka.stream.model.ProduitEnrichi;
-import com.kafka.stream.model.Referentiel;
+import com.kafka.stream.model.Demande;
+import com.kafka.stream.model.DemandeEnrichie;
+import com.kafka.stream.model.Usager;
 import com.kafka.stream.serializer.JsonDeserializer;
 import com.kafka.stream.serializer.JsonSerializer;
 import org.apache.kafka.common.serialization.Serde;
@@ -13,15 +13,9 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.kstream.KTable;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * Created by thm on 15/06/2016.
- */
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -37,7 +31,7 @@ public class Main {
         Properties streamsConfiguration = new Properties();
         // Donne un nom à l'application. Toutes les instances de cette application pourront se partager les partitions
         // de mêmes topics grâce à cet identifiant.
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "enrichissement-achats");
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "enrichissement-demande");
         // Broker Kafka
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafka);
         // Noeud Zookeeper
@@ -46,30 +40,29 @@ public class Main {
         KStreamBuilder builder = new KStreamBuilder();
 
         // Initialisation des ser/déserialiseurs pour lire et écrire dans les topics
-        Serde<ProduitBrut> achatBrutSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(ProduitBrut.class));
-        Serde<ProduitEnrichi> achatEnrichiSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(ProduitEnrichi.class));
-        Serde<Referentiel> referentielSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(Referentiel.class));
+        Serde<Demande> DemandeSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(Demande.class));
+        Serde<DemandeEnrichie> DemandeEnrichiSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(DemandeEnrichie.class));
+        Serde<Usager> usagerSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(Usager.class));
 
-        // Création d'un KStream (flux) à partir du topic "achats"
-        KStream<String, ProduitBrut> achats = builder.stream(Serdes.String(), achatBrutSerde, "achats");
+        // Création d'un KStream (flux) à partir du topic "demandes"
+        KStream<String, Demande> demandes = builder.stream(Serdes.String(), DemandeSerde, "demandes");
 
-        // Création d'une KTable (table) à partir du topic "referentiel"
-        KTable<String, Referentiel> referentiel = builder.table(Serdes.String(), referentielSerde, "referentiel");
+        // Création d'une KTable (table) à partir du topic "usagers"
+        KTable<String, Usager> usagers = builder.table(Serdes.String(), usagerSerde, "usagers");
 
-
-        KStream<String, ProduitEnrichi> enriched = achats
+        KStream<String, DemandeEnrichie> enriched = demandes
                 // Re-partitionnement du flux avec la nouvelle clé qui nous permettra de faire une jointure
                 .map((k, v) -> new KeyValue<>(v.getId().toString(), v))
                 // Copie du flux vers un nouveau topic avec la nouvelle clé
-                .through(Serdes.String(), achatBrutSerde, "achats-by-product-id")
-                // Jointure du flux d'achats avec le référentiel
-                .leftJoin(referentiel, (achat, ref) -> {
-                    if (ref == null) return new ProduitEnrichi(achat.getId(), "REF INCONNUE", achat.getPrice());
-                    else return new ProduitEnrichi(achat.getId(), ref.getName(), achat.getPrice());
+                .through(Serdes.String(), DemandeSerde, "demandes-by-usager-id")
+                // Jointure du flux de demandes avec les usagers
+                .leftJoin(usagers, (demande, ref) -> {
+                    if (ref == null) return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), "REF INCONNUE");
+                    else return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), ref.getEMail());
                 });
 
-        // On publie le flux dans un topic "achats-enrichis"
-        enriched.to(Serdes.String(), achatEnrichiSerde, "achats-enrichis");
+        // On publie le flux dans un topic "demandes-enrichies"
+        enriched.to(Serdes.String(), DemandeEnrichiSerde, "demandes-enrichies");
 
         // Enfin, on démarre l'application
         KafkaStreams streams = new KafkaStreams(builder, streamsConfiguration);
