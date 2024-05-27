@@ -28,18 +28,18 @@ Deux types de streams existent dans les API fournies par kafka: les KStreams et 
 
 ![Aperçu](images/kstream-ktable.png "Aperçu")
 
-### Produits/Libellés
+### Demandes/Usagers
 
-Problème: associer une table d'identifiants produits avec les libellés des produits correspondants.  
+Problème: associer une table contenant des informations détaillées sur un usager avec ses demandes correspondantes.  
 
-Un référentiel de mappings entre des identifiants de produits et les libellés associés peut être représenté par une KTable. Si l’on décide de mettre à jour le libellé d’un produit du référentiel, l’injection d’un nouveau message écrasera l’ancien. La politique de log compaction de Kafka nous garantit que nos tuples ne seront pas effacés, contrairement à un topic non compacté qui voit ses messages effacés après 7 jours, par défaut.
+Une table de correspondance entre l'identifiant d'un usager et ses informations détaillées peut être représentée à l'aide d'une *KTable*. Lors d'une mise à jour des informations, l’injection d’un nouveau message relatif aux informations d'un usager écrasera l’ancien. La politique de log compaction de Kafka garantit que les tuples ne seront pas effacés, contrairement à un topic non compacté qui voit ses messages effacés après 7 jours, par défaut.
 
-Lorsqu’une application travaillant avec des KTables démarre, elle lit entièrement le topic depuis l’offset où elle s’était arrêtée (de la fin par défaut, si elle démarre pour la première fois), puis stocke les messages dans une instance RocksDB qui est un cache persisté et local à chaque JVM. Elle reste ensuite à l’écoute du topic pour insérer tout nouveau message dans son cache.
+Lorsqu’une application qui utilise des KTables démarre, elle lit entièrement le topic depuis l’offset où elle s’était arrêtée (de la fin par défaut, si elle démarre pour la première fois), puis stocke les messages dans une instance RocksDB qui est un cache persisté et local à chaque JVM. Elle reste ensuite à l’écoute du topic pour insérer tout nouveau message dans son cache.
 
-Pour une instance d’une application KStreams, joindre un KStream(topic achats) et une KTable(topic usagers) revient donc à :
+Pour une instance d’une application KStreams, joindre un KStream(topic demandes) et une KTable(topic usagers) revient à:
 
-- lire et mémoriser dans un cache l’ensemble des partitions assignées du topic réferentiel.
-- joindre chaque tuple provenant des partitions assignées du topic achats à la volée avec un tuple de la KTable référentiel.
+- lire et mémoriser dans un cache l’ensemble des partitions assignées du topic usagers.
+- joindre chaque tuple provenant des partitions assignées du topic demandes à la volée avec un tuple de la KTable usagers.
 
 ![Aperçu](images/workflow.png "Aperçu")
 
@@ -131,16 +131,16 @@ Ici la clé n'est pas présente, ce qui revient à produire le message dans une 
 Pour consommer les messages présents dans le topic `demandes-enrichies`, il faut exécuter la commande suivante (dans le container kafka en exécution):
 
 ```bash
-opt/scripts/consume-output.sh
+/opt/scripts/consume-output.sh
 ```
 
 Output :
 
 ```bash
-{"id":2,"name":"produit2","price":13.40}
-{"id":30,"name":"REF INCONNUE","price":1.05}
-{"id":1,"name":"produit1","price":3.40}
-{"id":1,"name":"produit1","price":3.45}
+"id":1,"name":"usager","firstName":"usr01","email":"usager.001@mail.com"}
+{"id":2,"name":"usager","firstName":"usr02","email":"usager.002@mail.com"}
+{"id":30,"name":"usager","firstName":"usr01","email":"!!! Usager inconnu !!!"}
+{"id":1,"name":"usager","firstName":"usr-01","email":"usager.001@mail.com"}
 ```
 
-On voit que les achats ont été enrichis du libellé produit grâce au référentiel.
+Les demandes des usgares sont enrichies de leur adresse eMail par une *jointure* avec  les informations détaillées des usagers.
