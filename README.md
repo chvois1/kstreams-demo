@@ -88,7 +88,7 @@ docker exec -it $(docker ps | grep kafka | awk {'print $1'} | head -1) bash
 Les topics sont créés automatiquement lors du démarrage de l'application Java exécutée par le container kstreams. La commande suivante pertmet de s'en assurer:
 
 ```bash
-    /opt/scripts/list-topics.sh
+/opt/scripts/list-topics.sh
 ```
 
 ### Référentiel
