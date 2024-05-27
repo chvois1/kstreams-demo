@@ -57,7 +57,7 @@ public class Main {
                 .through(Serdes.String(), DemandeSerde, "demandes-by-usager-id")
                 // Jointure du flux de demandes avec les usagers
                 .leftJoin(usagers, (demande, ref) -> {
-                    if (ref == null) return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), "REF INCONNUE");
+                    if (ref == null) return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), "!!! Usager inconnu !!!");
                     else return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), ref.getEmail());
                 });
 

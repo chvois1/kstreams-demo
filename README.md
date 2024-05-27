@@ -103,13 +103,13 @@ Cela injecte les messages (clé,valeur) suivants dans le référentiel :
 
 ```bash
 1,{"id":1, "email":"usager.001@mail.com"}
-2,{"id":2, "email":"usager.002@mail.com""}
-3,{"id":3, "email":"usager.003@mail.com""}
+2,{"id":2, "email":"usager.002@mail.com"}
+3,{"id":3, "email":"usager.003@mail.com"}
 ```
 
 ### Demandes d'usagers
 
-Pour injecter des demandes d'usagers dans le topic `demandes`, il faut exécuter la commande suivante (dans le container kafka enexécution):
+Pour injecter des demandes d'usagers dans le topic `demandes`, il faut exécuter la commande suivante (dans le container kafka en exécution):
 
 ```bash
 /opt/scripts/inject-demandes.sh
@@ -128,10 +128,10 @@ Ici la clé n'est pas présente, ce qui revient à produire le message dans une 
 
 ### Résultat
 
-Consommer les messages présents dans le topic `demandes-enrichies` :
+Pour consommer les messages présents dans le topic `demandes-enrichies`, il faut exécuter la commande suivante (dans le container kafka en exécution):
 
 ```bash
-    docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/consume-output.sh"
+opt/scripts/consume-output.sh
 ```
 
 Output :
