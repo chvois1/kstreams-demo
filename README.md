@@ -71,10 +71,24 @@ cd docker
 docker compose up 
 ```
 
-### Créer les topics
+### Connexion au container
+
+Pour visuliser les résultats, il faut se connecter dans le container en exécution. Les instructions suivantes créent une nouvelle session et une commande *docker logs* n'afficherait que les informations de la session d'origine.
 
 ```bash
-docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/create-topics.sh"
+    docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/consume-output.sh"
+```
+
+Pour se connecter au container kafka en exécution, il faut exécuter la suite d'instructions suivantes dans une nouvelle fEnêtre de terminal:
+
+```bash
+docker exec -it $(docker ps | grep kafka | awk {'print $1'} | head -1) bash 
+```
+
+Les topics sont créés automatiquement lors du démarrage de l'application Java exécutée par le container kstreams. La commande suivante pertmet de s'en assurer:
+
+```bash
+    /opt/scripts/list-topics.sh
 ```
 
 ### Référentiel
@@ -115,8 +129,6 @@ Ici la clé n'est pas présente, ce qui revient à produire le message dans une 
 ### Résultat
 
 Consommer les messages présents dans le topic `achats-enrichis` :
-
-Je pense que lorsque vous appelez 'docker exec', en fait, vous créez une nouvelle session, mais la commande 'docker logs' n'affiche que les informations de la session d'origine.
 
 ```bash
     docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/consume-output.sh"

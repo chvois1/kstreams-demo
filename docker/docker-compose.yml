@@ -31,7 +31,7 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       #KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       #KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      #KAFKA_CREATE_TOPICS: referentiel:8:1,achats:8:1,achats-by-product-id:8:1,achats-enrichis:8:1
+      #KAFKA_CREATE_TOPICS: usagers:8:1,demandes:8:1,demandes-by-usager-id:8:1,demandes-enrichies:8:1
 
   kstreams:
     image: kstreams-demo:0.0.1
