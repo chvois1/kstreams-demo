@@ -91,44 +91,44 @@ Les topics sont créés automatiquement lors du démarrage de l'application Java
 /opt/scripts/list-topics.sh
 ```
 
-### Référentiel
+### Référentiel des usagers
 
-Injecter des produits dans le topic `referentiel` :
+Pour injecter des infomations sur les usagers dans le topic `usagers`, il faut exécuter la commande suivante (dans le container kafka enexécution):
 
 ```bash
-docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/inject-referentiel.sh"
+/opt/scripts/inject-usagers.sh
 ```
 
 Cela injecte les messages (clé,valeur) suivants dans le référentiel :
 
 ```bash
-1,{"id":1, "name":"produit1"}
-2,{"id":2, "name":"produit2"}
-3,{"id":3, "name":"produit3"}
+1,{"id":1, "eMail":"usager.001@mail.com"}
+2,{"id":2, "eMail":"usager.002@mail.com""}
+3,{"id":3, "eMail":"usager.003@mail.com""}
 ```
 
-### Achats
+### Demandes d'usagers
 
-Injecter des produits dans le topic `achats` :
+Pour injecter des demandes d'usagers dans le topic `demandes`, il faut exécuter la commande suivante (dans le container kafka enexécution):
 
 ```bash
-docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/inject-achats.sh"
+/opt/scripts/inject-demandes.sh
 ```
 
-Cela injecte les messages suivants dans le flux des achats :
+Cela injecte les messages suivants dans le flux des demandes :
 
 ```bash
-{"id": 1, "price": 3.45}
-{"id": 2, "price": 13.40}
-{"id": 30, "price": 1.05}
-{"id": 1, "price": 3.40}
+{"id": 1, "name": "usager", "firstName": "usr01"}
+{"id": 2, "name": "usager", "firstName": "usr02"}
+{"id": 30, "name": "usager", "firstName": "usr01"}
+{"id": 1, "name": "usager", "firstName": "usr-01"}
 ```
 
 Ici la clé n'est pas présente, ce qui revient à produire le message dans une partition aléatoire.
 
 ### Résultat
 
-Consommer les messages présents dans le topic `achats-enrichis` :
+Consommer les messages présents dans le topic `demandes-enrichies` :
 
 ```bash
     docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/consume-output.sh"
