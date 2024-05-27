@@ -5,17 +5,17 @@ public class DemandeEnrichie {
     private Long id;
     private String name;
     private String firstName;
-    private String eMail;
+    private String email;
  
-    public DemandeEnrichie(Long id, String name, String firstName, String eMail) {
+    public DemandeEnrichie(Long id, String name, String firstName, String email) {
         this.id = id;
         this.name = name;
         this.firstName = firstName;
-        this.eMail = eMail;
+        this.email = email;
     }
 
-    public String getEMail() {
-        return eMail;
+    public String getEmail() {
+        return email;
     }
 
     public String getFirstName() {
@@ -41,4 +41,7 @@ public class DemandeEnrichie {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }    
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

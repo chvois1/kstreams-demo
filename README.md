@@ -93,7 +93,7 @@ Les topics sont créés automatiquement lors du démarrage de l'application Java
 
 ### Référentiel des usagers
 
-Pour injecter des infomations sur les usagers dans le topic `usagers`, il faut exécuter la commande suivante (dans le container kafka enexécution):
+Pour injecter des informations sur les usagers dans le topic `usagers`, il faut exécuter la commande suivante (dans le container kafka en exécution):
 
 ```bash
 /opt/scripts/inject-usagers.sh
@@ -102,9 +102,9 @@ Pour injecter des infomations sur les usagers dans le topic `usagers`, il faut e
 Cela injecte les messages (clé,valeur) suivants dans le référentiel :
 
 ```bash
-1,{"id":1, "eMail":"usager.001@mail.com"}
-2,{"id":2, "eMail":"usager.002@mail.com""}
-3,{"id":3, "eMail":"usager.003@mail.com""}
+1,{"id":1, "email":"usager.001@mail.com"}
+2,{"id":2, "email":"usager.002@mail.com""}
+3,{"id":3, "email":"usager.003@mail.com""}
 ```
 
 ### Demandes d'usagers

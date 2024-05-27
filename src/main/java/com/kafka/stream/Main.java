@@ -58,7 +58,7 @@ public class Main {
                 // Jointure du flux de demandes avec les usagers
                 .leftJoin(usagers, (demande, ref) -> {
                     if (ref == null) return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), "REF INCONNUE");
-                    else return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), ref.getEMail());
+                    else return new DemandeEnrichie(demande.getId(), demande.getName(), demande.getFirstName(), ref.getEmail());
                 });
 
         // On publie le flux dans un topic "demandes-enrichies"

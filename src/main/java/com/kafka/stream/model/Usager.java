@@ -3,10 +3,10 @@ package com.kafka.stream.model;
 public class Usager {
 
     private Long id;
-    private String eMail;
+    private String email;
 
-    public String getEMail() {
-        return eMail;
+    public String getEmail() {
+        return email;
     }
 
     public Long getId() {
@@ -17,7 +17,7 @@ public class Usager {
         this.id = id;
     }
 
-    public void setEMail(String name) {
-        this.eMail = name;
+    public void setEmail(String name) {
+        this.email = name;
     }
 }
