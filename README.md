@@ -36,7 +36,7 @@ Un référentiel de mappings entre des identifiants de produits et les libellés
 
 Lorsqu’une application travaillant avec des KTables démarre, elle lit entièrement le topic depuis l’offset où elle s’était arrêtée (de la fin par défaut, si elle démarre pour la première fois), puis stocke les messages dans une instance RocksDB qui est un cache persisté et local à chaque JVM. Elle reste ensuite à l’écoute du topic pour insérer tout nouveau message dans son cache.
 
-Pour une instance d’une application KStreams, joindre un KStream(topic achats) et une KTable(topic referentiel) revient donc à :
+Pour une instance d’une application KStreams, joindre un KStream(topic achats) et une KTable(topic usagers) revient donc à :
 
 - lire et mémoriser dans un cache l’ensemble des partitions assignées du topic réferentiel.
 - joindre chaque tuple provenant des partitions assignées du topic achats à la volée avec un tuple de la KTable référentiel.
@@ -73,19 +73,19 @@ docker compose up
 
 ### Connexion au container
 
-Pour visuliser les résultats, il faut se connecter dans le container en exécution. Les instructions suivantes créent une nouvelle session et une commande *docker logs* n'afficherait que les informations de la session d'origine.
+Pour visuliser les résultats, il faut se connecter dans le container en exécution. Les instructions suivantes sont inefficaces car elles créent une nouvelle session mais la sortie de la commande *consume-output* à lieu dans la session d'origine (et non dans la nouvelle session qui vient d'être créée). D'une manière analogue, une commande *docker logs* afficherait ses informations uniquement dans la session d'origine.
 
 ```bash
-    docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/consume-output.sh"
+docker exec $(docker ps | grep kafka | awk {'print $1'} | head -1) bash -c "/opt/scripts/consume-output.sh"
 ```
 
-Pour se connecter au container kafka en exécution, il faut exécuter la suite d'instructions suivantes dans une nouvelle fEnêtre de terminal:
+Pour se connecter au container kafka en exécution, il faut exécuter la suite d'instructions suivantes dans une nouvelle fenêtre de terminal:
 
 ```bash
 docker exec -it $(docker ps | grep kafka | awk {'print $1'} | head -1) bash 
 ```
 
-Les topics sont créés automatiquement lors du démarrage de l'application Java exécutée par le container kstreams. La commande suivante pertmet de s'en assurer:
+Les topics sont créés automatiquement lors du démarrage de l'application Java exécutée dans le container kstreams. La commande suivante pertmet de s'en assurer:
 
 ```bash
 /opt/scripts/list-topics.sh
